@@ -1,0 +1,114 @@
+<div class="card" *ngIf=" !isEditing && !isAddNew">
+
+  <div class="card-header">
+    <div class="pull-left">
+      <h4>Stored Readers ({{readers.length}})</h4>
+
+    </div>
+    <div class="pull-right">
+      <button class="btn btn-primary btn-sm"(click)="enableAddNew()"><i class="fa fa-plus-square-o">
+      </i>Add New
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-default">
+      <tr>
+        <th>Reader Id</th>
+
+        <th>name</th>
+        <th>weeklyReadingGoal</th>
+        <th>totalMinutesRead</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let reader of readers">
+     <td>{{reader.readerID}}</td>
+        <td>
+          {{reader.name}}
+        </td>
+        <td>{{reader.weeklyReadingGoal}}</td>
+        <td>{{reader.totalMinutesRead}}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" (click)="enableEditing(reader)"><i class="fa fa-pencil"></i>
+            Edit
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="deleteReader(reader)"><i class="fa fa-trash"></i>
+            Delete
+          </button>
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+    <div [hidden]="!infoMsg.body" class="alert alert-{{infoMsg.type}} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Message:</strong> {{infoMsg.body}}
+    </div>
+  </div>
+</div>
+
+
+<!-- Add New Book -->
+
+<div class="card" *ngIf="!isEditing && isAddNew">
+  <h4 class="card-header">Add new reader to storage...</h4>
+  <form [formGroup]="addReaderForm" (ngSubmit)="addReader()" style="padding: 10px;">
+    <div class="form-group col-3">
+      <label for="name">name</label>
+      <input id="name" class="form-control" type="text" name="name"
+             formControlName="name" placeholder="name">
+
+    </div>
+    <div class="form-group col-6">
+      <label for="weeklyReadingGoal">weeklyReadingGoal</label>
+      <input id="weeklyReadingGoal" class="form-control" type="text" name="weeklyReadingGoal"
+              formControlName="weeklyReadingGoal" placeholder="weeklyReadingGoal">
+    </div>
+    <div class="form-group col-3">
+      <label for="totalMinutesRead">totalMinutesRead</label>
+      <input id="totalMinutesRead" class="form-control" type="text" name="totalMinutesRead"
+             formControlName="totalMinutesRead" placeholder="totalMinutesRead">
+    </div>
+
+    <div style="padding-left: 20px;">
+      <button class="btn btn-primary" type="submit" [disabled]="!addReaderForm.valid">
+        <i class="fa fa-floppy-o"></i> Add
+      </button>
+      <button class="btn btn-warning" (click)="cancelAddNew()"><i class="fa fa-times"></i> Cancel</button>
+    </div>
+  </form>
+</div>
+
+<!-- Edit Existing Book -->
+<div class="card" *ngIf="!isAddNew && isEditing">
+  <h4 class="card-header">Edit Book</h4>
+  <form [formGroup]="editReaderForm" (ngSubmit)="editReader(reader)" style="padding:10px;">
+    <div class="form-group col-3">
+      <label for="name">name</label>
+      <input  class="form-control" type="text" name="name" [(ngModel)]="reader.name"
+              formControlName="name" placeholder="name">
+    </div>
+    <div class="form-group col-6">
+      <label for="weeklyReadingGoal">weeklyReadingGoal</label>
+      <input id="weeklyReadingGoal" class="form-control" type="text" name="weeklyReadingGoal" [(ngModel)]="reader.weeklyReadingGoal"
+             formControlName="weeklyReadingGoal" placeholder="weeklyReadingGoal">
+    </div>
+    <div class="form-group col-3">
+      <label for="totalMinutesRead">totalMinutesRead</label>
+      <input type="text" class="form-control" id="publicYear"
+             [(ngModel)]="reader.totalMinutesRead" formControlName="totalMinutesRead" placeholder="totalMinutesRead">
+    </div>
+
+    <div style="padding-left: 20px;">
+      <button class="btn btn-primary" type="submit" [disabled]="!editReaderForm.valid" ><i class="fa fa-floppy-o"></i> Save
+      </button>
+      <button class="btn btn-warning"(click)="cancelEditing()" ><i class="fa fa-times"></i> Cancel</button>
+    </div>
+  </form>
+</div>
+

@@ -1,0 +1,131 @@
+<div class="card" *ngIf=" !isEditing && !isAddNew">
+
+  <div class="card-header">
+    <div class="pull-left">
+      <h4>Stored Books ({{books.length}})</h4>
+
+    </div>
+    <div class="pull-right">
+      <button class="btn btn-primary btn-sm"(click)="enableAddNew()"><i class="fa fa-plus-square-o">
+      </i>Add New
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-default">
+      <tr>
+         <th>Book Id</th>
+        <th>title</th>
+        <th>author</th>
+        <th>publication Year</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr  *ngFor="let book of books">
+        <td>{{book.bookID}}</td>
+
+        <td>
+          {{book.title}}
+        </td>
+        <td>{{book.author}}</td>
+        <td>{{book.publicationYear}}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" (click)="enableEditing(book)"><i class="fa fa-pencil"></i>
+            Edit
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="deleteBook(book)"><i class="fa fa-trash"></i>
+            Delete
+          </button>
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+    <div [hidden]="!infoMsg.body" class="alert alert-{{infoMsg.type}} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Message:</strong> {{infoMsg.body}}
+    </div>
+  </div>
+</div>
+
+
+<!-- Add New Book -->
+
+<div class="card" *ngIf="!isEditing && isAddNew">
+  <h4 class="card-header">Add new book to storage...</h4>
+  <form [formGroup]="addBookForm" (ngSubmit)="addBook()" style="padding: 10px;">
+    <div class="form-group col-3" [ngClass]="{'error': title.invalid && title.dirty }">
+      <label for="title">Title</label>
+      <input id="title" class="form-control" type="text" name="title"
+             formControlName="title" placeholder="title">
+      <div *ngIf="title.invalid && (title.dirty || title.touched)"
+           class="alert alert-danger">
+        <span *ngIf="title.errors.required">
+          title is required.
+        </span>
+      </div>
+    </div>
+    <div class="form-group col-6"[ngClass]="{'error': author.invalid && author.dirty }">
+      <label for="Author">author</label>
+      <input  class="form-control" type="text" name="author"
+             formControlName="author" placeholder="author">
+      <div *ngIf="author.invalid && (author.dirty || author.touched)"
+           class="alert alert-danger">
+        <span *ngIf="author.errors.required">
+          author is required.
+        </span>
+      </div>
+    </div>
+    <div class="form-group col-3" [ngClass]="{'error': publicationYear.invalid && publicationYear.dirty }">
+      <label for="publicationYear">publicationYear</label>
+      <input id="publicationYear" class="form-control" type="text" name="publicationYear"
+             formControlName="publicationYear" placeholder="publicationYear">
+      <div *ngIf="publicationYear.invalid && (publicationYear.dirty || publicationYear.touched)"
+           class="alert alert-danger">
+        <span *ngIf="publicationYear.errors.required">
+          publicationYear is required.
+        </span>
+
+      </div>
+   </div>
+
+    <div style="padding-left: 20px;">
+      <button class="btn btn-primary" type="submit" [disabled]="!addBookForm.valid">
+        <i class="fa fa-floppy-o"></i> Add
+      </button>
+      <button class="btn btn-warning" (click)="cancelAddNew()"><i class="fa fa-times"></i> Cancel</button>
+    </div>
+  </form>
+</div>
+
+<!-- Edit Existing Book -->
+<div class="card" *ngIf="!isAddNew && isEditing">
+  <h4 class="card-header">Edit Book</h4>
+  <form [formGroup]="editBookForm" (ngSubmit)="editBook(book)" style="padding:10px;">
+    <div class="form-group col-3">
+      <label for="Title">title</label>
+      <input  class="form-control" type="text" name="title" [(ngModel)]="book.title"
+             formControlName="title" placeholder="title">
+    </div>
+    <div class="form-group col-6">
+      <label for="Author">author</label>
+      <input id="Author" class="form-control" type="text" name="author" [(ngModel)]="book.author"
+             formControlName="author" placeholder="author">
+    </div>
+    <div class="form-group col-3">
+      <label for="publicYear">publicationYear</label>
+      <input type="text" class="form-control" id="publicYear"
+             [(ngModel)]="book.publicationYear" formControlName="publicationYear" placeholder="publicationYear">
+    </div>
+
+    <div style="padding-left: 20px;">
+      <button class="btn btn-primary" type="submit" ><i class="fa fa-floppy-o"></i> Save
+      </button>
+      <button class="btn btn-warning"(click)="cancelEditing()" ><i class="fa fa-times"></i> Cancel</button>
+    </div>
+  </form>
+</div>
